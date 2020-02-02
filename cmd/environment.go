@@ -2,9 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"io"
-	"strconv"
 	"time"
 
 	"github.com/CzarSimon/httputil"
@@ -29,15 +27,10 @@ func (e *env) register() error {
 	span, ctx := opentracing.StartSpanFromContext(context.Background(), "register_self")
 	defer span.Finish()
 
-	port, err := strconv.Atoi(e.cfg.port)
-	if err != nil {
-		return fmt.Errorf("failed to parse port. %w", err)
-	}
-
 	self := dto.Service{
 		Application: "turn-server",
-		Location:    e.cfg.serviceName,
-		Port:        port,
+		Location:    e.cfg.turn.ip,
+		Port:        e.cfg.service.port,
 		Status:      dto.StatusHealty,
 	}
 
@@ -46,7 +39,7 @@ func (e *env) register() error {
 		return err
 	}
 
-	e.cfg.serviceID = svc.ID
+	e.cfg.service.id = svc.ID
 	return nil
 }
 
@@ -54,7 +47,7 @@ func (e *env) unregister() error {
 	span, ctx := opentracing.StartSpanFromContext(context.Background(), "unregister_self")
 	defer span.Finish()
 
-	err := e.serviceregistry.SetStatus(ctx, e.cfg.serviceID, dto.StatusUnhealthy)
+	err := e.serviceregistry.SetStatus(ctx, e.cfg.service.id, dto.StatusUnhealthy)
 	if err != nil {
 		return err
 	}
