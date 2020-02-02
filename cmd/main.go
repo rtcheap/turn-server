@@ -12,7 +12,7 @@ func main() {
 	defer e.close()
 	err := e.register()
 	if err != nil {
-		log.Fatal("registration failed", zap.Error(err))
+		log.Fatal("service registration failed", zap.Error(err))
 	}
 
 	log.Info("Hello World")

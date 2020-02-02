@@ -43,10 +43,22 @@ func (e *env) register() error {
 
 	svc, err := e.serviceregistry.Register(ctx, self)
 	if err != nil {
-		return fmt.Errorf("the service failed to register itself. %w", err)
+		return err
 	}
 
 	e.cfg.serviceID = svc.ID
+	return nil
+}
+
+func (e *env) unregister() error {
+	span, ctx := opentracing.StartSpanFromContext(context.Background(), "unregister_self")
+	defer span.Finish()
+
+	err := e.serviceregistry.SetStatus(ctx, e.cfg.serviceID, dto.StatusUnhealthy)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -55,7 +67,12 @@ func (e *env) checkHealth() error {
 }
 
 func (e *env) close() {
-	err := e.traceCloser.Close()
+	err := e.unregister()
+	if err != nil {
+		log.Error("the service failed to unregister itself", zap.Error(err))
+	}
+
+	err = e.traceCloser.Close()
 	if err != nil {
 		log.Error("failed to close tracer connection", zap.Error(err))
 	}
