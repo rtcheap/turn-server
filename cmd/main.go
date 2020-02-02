@@ -1,11 +1,19 @@
 package main
 
 import (
-    "fmt"
-
-    _ "github.com/go-sql-driver/mysql"
+	"github.com/CzarSimon/httputil/logger"
+	"go.uber.org/zap"
 )
 
+var log = logger.GetDefaultLogger("turn-server/main")
+
 func main() {
-    fmt.Println("Hello World")
+	e := setupEnv()
+	defer e.close()
+	err := e.register()
+	if err != nil {
+		log.Fatal("registration failed", zap.Error(err))
+	}
+
+	log.Info("Hello World")
 }
