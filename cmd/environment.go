@@ -13,12 +13,15 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/rtcheap/dto"
 	"github.com/rtcheap/service-clients/go/serviceregistry"
+	"github.com/rtcheap/turn-server/internal/repository"
+	"github.com/rtcheap/turn-server/internal/service"
 	jaegercfg "github.com/uber/jaeger-client-go/config"
 	"go.uber.org/zap"
 )
 
 type env struct {
 	cfg             config
+	userService     service.UserService
 	serviceregistry serviceregistry.Client
 	traceCloser     io.Closer
 }
@@ -92,8 +95,14 @@ func setupEnv() *env {
 		RPCClient: rpc.NewClient(5 * time.Second),
 	})
 
+	userService := service.UserService{
+		Realm: cfg.turn.realm,
+		Keys:  repository.NewKeyRepository(),
+	}
+
 	return &env{
 		cfg:             cfg,
+		userService:     userService,
 		serviceregistry: registryClient,
 		traceCloser:     closer,
 	}

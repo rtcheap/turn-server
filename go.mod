@@ -8,6 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.5.0
 	github.com/opentracing/opentracing-go v1.1.0
 	github.com/pion/turn v1.4.0 // indirect
+	github.com/pion/turn/v2 v2.0.2
 	github.com/rtcheap/dto v0.0.0-20200202200637-cca360490513
 	github.com/rtcheap/service-clients/go v0.0.0-20200202215155-9a3c293dfce9
 	github.com/stretchr/testify v1.4.0

@@ -7,6 +7,8 @@ export SERVICE_NAME='localhost'
 export SERVICE_PORT='8081'
 export SERVICE_REGISTRY_URL='http://localhost:8080'
 
+export TURN_PUBLIC_IP='127.0.0.1'
+
 export JWT_ISSUER='rtcheap'
 export JWT_SECRET='password'
 
