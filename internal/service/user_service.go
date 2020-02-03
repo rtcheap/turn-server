@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/CzarSimon/httputil"
 	"github.com/pion/turn/v2"
 	"github.com/rtcheap/turn-server/internal/repository"
 )
 
 // Session user session.
 type Session struct {
-	UserID string `json:"user_id,omitempty"`
+	UserID string `json:"userId,omitempty"`
 	Key    string `json:"key,omitempty"`
 }
 
@@ -27,10 +28,15 @@ func (s *UserService) FindKey(username, realm string, addr net.Addr) ([]byte, bo
 
 // CreateKey creates a key from a user session and stores it for future use.
 func (s *UserService) CreateKey(session Session) error {
+	if _, ok := s.Keys.Find(session.UserID); ok {
+		err := fmt.Errorf("session already exists for user(id=%s)", session.UserID)
+		return httputil.ConflictError(err)
+	}
+
 	key := turn.GenerateAuthKey(session.UserID, s.Realm, session.Key)
 	err := s.Keys.Save(session.UserID, key)
 	if err != nil {
-		return fmt.Errorf("failed to store key created for user(id=%s). %w", session.UserID, err)
+		return fmt.Errorf("failed to store session key created for user(id=%s). %w", session.UserID, err)
 	}
 
 	return nil

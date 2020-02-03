@@ -60,8 +60,8 @@ func newServer(e *env) *http.Server {
 	}
 	v1 := r.Group("/v1", rbac.Secure(jwt.SystemRole))
 
-	v1.POST("/users", notImplemented)
-	v1.GET("/status", notImplemented)
+	v1.POST("/sessions", e.addSession)
+	v1.GET("/sessions/count", notImplemented)
 
 	return &http.Server{
 		Addr:    fmt.Sprintf(":%d", e.cfg.service.port),
