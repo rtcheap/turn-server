@@ -8,14 +8,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/opentracing/opentracing-go"
 	tracelog "github.com/opentracing/opentracing-go/log"
-	"github.com/rtcheap/turn-server/internal/service"
+	"github.com/rtcheap/dto"
 )
 
 func (e *env) addSession(c *gin.Context) {
 	span, _ := opentracing.StartSpanFromContext(c.Request.Context(), "controller.addSession")
 	defer span.Finish()
 
-	var session service.Session
+	var session dto.Session
 	err := c.BindJSON(&session)
 	if err != nil {
 		err = httputil.BadRequestError(fmt.Errorf("failed to parse request body. %w", err))

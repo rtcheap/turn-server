@@ -151,6 +151,8 @@ github.com/rogpeppe/go-internal v1.3.2/go.mod h1:xXDCJY+GAPziupqXw64V24skbSoqbTE
 github.com/rogpeppe/go-internal v1.4.0/go.mod h1:xXDCJY+GAPziupqXw64V24skbSoqbTEfhy4qGm1nDQc=
 github.com/rtcheap/dto v0.0.0-20200202200637-cca360490513 h1:4CSWiO6sfINl0yjR7g4D6MV4zq7S6ENma+EJDHLtzFg=
 github.com/rtcheap/dto v0.0.0-20200202200637-cca360490513/go.mod h1:XT7W1cctqzMFgrUCpvEsdi+t1MN3RrEc+mF5ZlzoNfY=
+github.com/rtcheap/dto v0.0.0-20200204141331-813685dc22dd h1:cVjzpaIgQkRJhvJFPD5lMwcEkHDVLnYK+M7Y3bWSL9k=
+github.com/rtcheap/dto v0.0.0-20200204141331-813685dc22dd/go.mod h1:XT7W1cctqzMFgrUCpvEsdi+t1MN3RrEc+mF5ZlzoNfY=
 github.com/rtcheap/service-clients v0.0.0-20200202215155-9a3c293dfce9 h1:NdODrukDjsUxHxOWC5vTeUi8njEiF9Y3QnRuiXBGERk=
 github.com/rtcheap/service-clients/go v0.0.0-20200202215155-9a3c293dfce9 h1:486zxwUUczn2f49ULCU6ChSC/P+WjQhrGhMxkKOnwqg=
 github.com/rtcheap/service-clients/go v0.0.0-20200202215155-9a3c293dfce9/go.mod h1:hIk/NDI8EiMCFoofwJ6fuYUZsshAVgvAdRNTZIoVd+g=

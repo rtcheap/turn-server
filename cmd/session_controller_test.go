@@ -13,6 +13,7 @@ import (
 	"github.com/CzarSimon/httputil/jwt"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pion/turn/v2"
+	"github.com/rtcheap/dto"
 	"github.com/rtcheap/turn-server/internal/repository"
 	"github.com/rtcheap/turn-server/internal/service"
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,7 @@ func TestAddNewUserSession(t *testing.T) {
 	server := newServer(e)
 
 	// Testcase: Happy path - A new session should be created.
-	session1 := service.Session{
+	session1 := dto.Session{
 		UserID: id.New(),
 		Key:    "secret-credential-1",
 	}
@@ -44,7 +45,7 @@ func TestAddNewUserSession(t *testing.T) {
 	assert.Equal(expectedKey, key)
 
 	// Testcase: Happy path - Another new session should be created.
-	session2 := service.Session{
+	session2 := dto.Session{
 		UserID: id.New(),
 		Key:    "secret-credential-2",
 	}
@@ -63,7 +64,7 @@ func TestAddNewUserSession(t *testing.T) {
 	assert.Equal(expectedKey, key)
 
 	// Testcase: Sad path a new session should not override an existing one.
-	session3 := service.Session{
+	session3 := dto.Session{
 		UserID: session1.UserID,
 		Key:    "secret-credential-3",
 	}
@@ -90,14 +91,16 @@ func TestGetSessionStatistics(t *testing.T) {
 	res := performTestRequest(server.Handler, req)
 	assert.Equal(http.StatusOK, res.Code)
 
-	var stats service.SessionStatistics
+	var stats dto.SessionStatistics
 	err := rpc.DecodeJSON(res.Result(), &stats)
 	assert.NoError(err)
-	assert.Equal(uint64(0), stats.Count)
+	assert.Equal(uint64(0), stats.Started)
+	assert.Equal(uint64(0), stats.InProgress())
+	assert.Equal(uint64(0), stats.Ended)
 
 	expectedCount := 10
 	for i := 0; i < expectedCount; i++ {
-		session := service.Session{
+		session := dto.Session{
 			UserID: id.New(),
 			Key:    fmt.Sprintf("secret-credential-%d", i+1),
 		}
@@ -113,7 +116,9 @@ func TestGetSessionStatistics(t *testing.T) {
 
 	err = rpc.DecodeJSON(res.Result(), &stats)
 	assert.NoError(err)
-	assert.Equal(uint64(10), stats.Count)
+	assert.Equal(uint64(10), stats.Started)
+	assert.Equal(uint64(10), stats.InProgress())
+	assert.Equal(uint64(0), stats.Ended)
 }
 
 func TestHealthCheck(t *testing.T) {
