@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/CzarSimon/httputil"
 	"github.com/gin-gonic/gin"
@@ -32,4 +33,14 @@ func (e *env) addSession(c *gin.Context) {
 
 	span.LogFields(tracelog.Bool("success", true))
 	httputil.SendOK(c)
+}
+
+func (e *env) getSessionStatistics(c *gin.Context) {
+	span, _ := opentracing.StartSpanFromContext(c.Request.Context(), "controller.getSessionStatistics")
+	defer span.Finish()
+
+	stats := e.userService.GetStatistics()
+
+	span.LogFields(tracelog.Bool("success", true))
+	c.JSON(http.StatusOK, stats)
 }

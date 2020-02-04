@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"net"
+	"sync/atomic"
 
 	"github.com/CzarSimon/httputil"
 	"github.com/pion/turn/v2"
@@ -15,10 +16,16 @@ type Session struct {
 	Key    string `json:"key,omitempty"`
 }
 
+// SessionStatistics statistics for the numbers of handled sessions
+type SessionStatistics struct {
+	Count uint64 `json:"count"`
+}
+
 // UserService handles adding, key generation and retrieving users.
 type UserService struct {
-	Realm string
-	Keys  repository.KeyRepository
+	sessionCounter uint64
+	Realm          string
+	Keys           repository.KeyRepository
 }
 
 // FindKey looks up and retuns the key for a given username.
@@ -39,5 +46,13 @@ func (s *UserService) CreateKey(session Session) error {
 		return fmt.Errorf("failed to store session key created for user(id=%s). %w", session.UserID, err)
 	}
 
+	atomic.AddUint64(&s.sessionCounter, 1)
 	return nil
+}
+
+// GetStatistics returns the gathered
+func (s *UserService) GetStatistics() SessionStatistics {
+	return SessionStatistics{
+		Count: s.sessionCounter,
+	}
 }

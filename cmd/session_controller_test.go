@@ -79,6 +79,43 @@ func TestAddNewUserSession(t *testing.T) {
 	assert.Equal(expectedKey, key)
 }
 
+func TestGetSessionStatistics(t *testing.T) {
+	assert := assert.New(t)
+	e, _ := createTestEnv()
+	server := newServer(e)
+
+	// Testcase: Happy path - Initally 0 sessions should have been created.
+
+	req := createTestRequest("/v1/sessions/statistics", http.MethodGet, jwt.SystemRole, nil)
+	res := performTestRequest(server.Handler, req)
+	assert.Equal(http.StatusOK, res.Code)
+
+	var stats service.SessionStatistics
+	err := rpc.DecodeJSON(res.Result(), &stats)
+	assert.NoError(err)
+	assert.Equal(uint64(0), stats.Count)
+
+	expectedCount := 10
+	for i := 0; i < expectedCount; i++ {
+		session := service.Session{
+			UserID: id.New(),
+			Key:    fmt.Sprintf("secret-credential-%d", i+1),
+		}
+
+		req := createTestRequest("/v1/sessions", http.MethodPost, jwt.SystemRole, session)
+		res := performTestRequest(server.Handler, req)
+		assert.Equal(http.StatusOK, res.Code)
+	}
+
+	req = createTestRequest("/v1/sessions/statistics", http.MethodGet, jwt.SystemRole, nil)
+	res = performTestRequest(server.Handler, req)
+	assert.Equal(http.StatusOK, res.Code)
+
+	err = rpc.DecodeJSON(res.Result(), &stats)
+	assert.NoError(err)
+	assert.Equal(uint64(10), stats.Count)
+}
+
 func TestHealthCheck(t *testing.T) {
 	assert := assert.New(t)
 	e, _ := createTestEnv()
@@ -99,7 +136,7 @@ func TestPermissions(t *testing.T) {
 		route  string
 	}{
 		{method: http.MethodPost, route: "/v1/sessions"},
-		{method: http.MethodGet, route: "/v1/sessions/count"},
+		{method: http.MethodGet, route: "/v1/sessions/statistics"},
 	}
 
 	badRoles := []string{jwt.AnonymousRole, jwt.AdminRole, ""}
