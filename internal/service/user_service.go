@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"sync/atomic"
@@ -38,6 +39,21 @@ func (s *UserService) CreateKey(session dto.Session) error {
 	}
 
 	atomic.AddUint64(&s.startedSessions, 1)
+	return nil
+}
+
+// Remove removes a user session.
+func (s *UserService) Remove(userID string) error {
+	err := s.Keys.Delete(userID)
+	if err != nil {
+		err = fmt.Errorf("failed to remove session for user(id=%s). %w", userID, err)
+		if errors.Is(err, repository.ErrNoSuchUser) {
+			return httputil.PreconditionRequiredError(err)
+		}
+		return err
+	}
+
+	atomic.AddUint64(&s.endedSessions, 1)
 	return nil
 }
 

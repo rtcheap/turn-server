@@ -35,6 +35,21 @@ func (e *env) addSession(c *gin.Context) {
 	httputil.SendOK(c)
 }
 
+func (e *env) removeSession(c *gin.Context) {
+	span, _ := opentracing.StartSpanFromContext(c.Request.Context(), "controller.addSession")
+	defer span.Finish()
+
+	err := e.userService.Remove(c.Param("userID"))
+	if err != nil {
+		span.LogFields(tracelog.Bool("success", false), tracelog.Error(err))
+		c.Error(err)
+		return
+	}
+
+	span.LogFields(tracelog.Bool("success", true))
+	httputil.SendOK(c)
+}
+
 func (e *env) getSessionStatistics(c *gin.Context) {
 	span, _ := opentracing.StartSpanFromContext(c.Request.Context(), "controller.getSessionStatistics")
 	defer span.Finish()

@@ -62,7 +62,7 @@ func newServer(e *env) *http.Server {
 
 	v1.POST("/sessions", e.addSession)
 	v1.GET("/sessions/statistics", e.getSessionStatistics)
-	v1.DELETE("/sessions/:userID", notImplemented)
+	v1.DELETE("/sessions/:userID", e.removeSession)
 
 	return &http.Server{
 		Addr:    fmt.Sprintf(":%d", e.cfg.service.port),

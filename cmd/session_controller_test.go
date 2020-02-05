@@ -108,6 +108,12 @@ func TestGetSessionStatistics(t *testing.T) {
 		req := createTestRequest("/v1/sessions", http.MethodPost, jwt.SystemRole, session)
 		res := performTestRequest(server.Handler, req)
 		assert.Equal(http.StatusOK, res.Code)
+
+		if i%2 == 0 {
+			req = createTestRequest("/v1/sessions/"+session.UserID, http.MethodDelete, jwt.SystemRole, nil)
+			res = performTestRequest(server.Handler, req)
+			assert.Equal(http.StatusOK, res.Code)
+		}
 	}
 
 	req = createTestRequest("/v1/sessions/statistics", http.MethodGet, jwt.SystemRole, nil)
@@ -116,9 +122,21 @@ func TestGetSessionStatistics(t *testing.T) {
 
 	err = rpc.DecodeJSON(res.Result(), &stats)
 	assert.NoError(err)
-	assert.Equal(uint64(10), stats.Started)
-	assert.Equal(uint64(10), stats.InProgress())
-	assert.Equal(uint64(0), stats.Ended)
+	assert.Equal(uint64(expectedCount), stats.Started)
+	assert.Equal(uint64(5), stats.InProgress())
+	assert.Equal(uint64(5), stats.Ended)
+}
+
+func TestRemoveMissingSession(t *testing.T) {
+	assert := assert.New(t)
+	e, _ := createTestEnv()
+	server := newServer(e)
+
+	// Testcase: Happy path - Initally 0 sessions should have been created.
+
+	req := createTestRequest("/v1/sessions/"+id.New(), http.MethodDelete, jwt.SystemRole, nil)
+	res := performTestRequest(server.Handler, req)
+	assert.Equal(http.StatusPreconditionRequired, res.Code)
 }
 
 func TestHealthCheck(t *testing.T) {
