@@ -153,9 +153,13 @@ github.com/rtcheap/dto v0.0.0-20200202200637-cca360490513 h1:4CSWiO6sfINl0yjR7g4
 github.com/rtcheap/dto v0.0.0-20200202200637-cca360490513/go.mod h1:XT7W1cctqzMFgrUCpvEsdi+t1MN3RrEc+mF5ZlzoNfY=
 github.com/rtcheap/dto v0.0.0-20200204141331-813685dc22dd h1:cVjzpaIgQkRJhvJFPD5lMwcEkHDVLnYK+M7Y3bWSL9k=
 github.com/rtcheap/dto v0.0.0-20200204141331-813685dc22dd/go.mod h1:XT7W1cctqzMFgrUCpvEsdi+t1MN3RrEc+mF5ZlzoNfY=
+github.com/rtcheap/dto v0.0.0-20200209161411-df08e73665a2 h1:mQ/7gY3HFeKtUy/GkqwgruhVTNS/ZuvMhHkjWEZw6HE=
+github.com/rtcheap/dto v0.0.0-20200209161411-df08e73665a2/go.mod h1:XT7W1cctqzMFgrUCpvEsdi+t1MN3RrEc+mF5ZlzoNfY=
 github.com/rtcheap/service-clients v0.0.0-20200202215155-9a3c293dfce9 h1:NdODrukDjsUxHxOWC5vTeUi8njEiF9Y3QnRuiXBGERk=
 github.com/rtcheap/service-clients/go v0.0.0-20200202215155-9a3c293dfce9 h1:486zxwUUczn2f49ULCU6ChSC/P+WjQhrGhMxkKOnwqg=
 github.com/rtcheap/service-clients/go v0.0.0-20200202215155-9a3c293dfce9/go.mod h1:hIk/NDI8EiMCFoofwJ6fuYUZsshAVgvAdRNTZIoVd+g=
+github.com/rtcheap/service-clients/go v0.0.0-20200215142953-80b9ab07ba8e h1:LdkoIfRodQOgWZgnDLvB+jBIAEwYv4f1O4oNWxpKg4o=
+github.com/rtcheap/service-clients/go v0.0.0-20200215142953-80b9ab07ba8e/go.mod h1:3exDD9dgCjqW964pwK2WHc5SlDSzf0eWh98NlfHpW/k=
 github.com/rtcheap/service-registry v0.1.0 h1:aYt0kQ+JO2nfAk3T3vNkFcZkyA6JIgUicqwXPjUkes8=
 github.com/rubenv/sql-migrate v0.0.0-20200119084958-8794cecc920c/go.mod h1:rtQlpHw+eR6UrqaS3kX1VYeaCxzCVdimDS7g5Ln4pPc=
 github.com/russross/blackfriday v1.5.2/go.mod h1:JO/DiYxRf+HjHt06OyowR9PTA263kcR/rfWxYHBV53g=
